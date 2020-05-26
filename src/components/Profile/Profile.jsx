@@ -1,5 +1,8 @@
 import React, {useState} from "react";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 import Navbar from "./Navbar";
+import "react-toastify/dist/ReactToastify.min.css";
 
 const Profile = () => {
     const [data, setData] = useState({});
@@ -11,28 +14,32 @@ const Profile = () => {
     };
 
     const handleSubmit = async event => {
-        event.preventDefault()
+        event.preventDefault();
 
         try {
-            const profile = await fetch(`https://api.github.com/users/${username}`);
-            const profileJson = await profile.json();
-            // console.log(profileJson);
+            const { data: profile } = await axios.get(`https://api.github.com/users/${username}`);
+            // console.log({ profile });
 
-            const repositories = await fetch(profileJson.repos_url);
-            const repositoriesJson = await repositories.json(repositories);
-            // console.log(repositoriesJson);
+            const { data: repositories } = await axios.get(profile.repos_url);
+            // console.log({ repositories });
 
-            if (profileJson) {
-                setData(profileJson);
-                setRepositories(repositoriesJson);
+            if (profile) {
+                setData(profile);
+                setRepositories(repositories);
             }
         } catch (err) {
-            alert("User not found");
+            if (err.response && err.response.status === 404) {
+                toast.error("User not found");
+            } else {
+                console.log(err)
+                toast.error("An unexpected error occurred")
+            }
         }
     };
 
     return (
         <React.Fragment>
+            <ToastContainer />
             <Navbar
                 username={username}
                 data={data}
