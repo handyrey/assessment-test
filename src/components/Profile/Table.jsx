@@ -16,7 +16,7 @@ const Table = ({ data, repositories }) => {
                     <td>
                         {repositories.map(repo => (
                             <ul className="list-unstyled" key={repo.id}>
-                                <li><a href={repo.html_url}>{repo.name}</a></li>
+                                <li><a href={repo.html_url} rel="noopener noreferrer" target="_blank">{repo.name}</a></li>
                             </ul>
                         ))}
                     </td>

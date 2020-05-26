@@ -1,32 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import Table from "./Table";
 import logo from "../../assets/logo.svg";
 
-const Navbar = () => {
-    const [data, setData] = useState({});
-    const [username, setUsername] = useState("");
-    const [repositories, setRepositories] = useState([]);
-
-    const onChangeHandler = event => {
-        setUsername(event.target.value);
-    };
-
-    const sumbitHandler = async event => {
-        event.preventDefault()
-
-        const profile = await fetch(`https://api.github.com/users/${username}`);
-        const profileJson = await profile.json();
-        console.log(profileJson);
-
-        const repositories = await fetch(profileJson.repos_url);
-        const repositoriesJson = await repositories.json(repositories)
-        console.log(repositoriesJson)
-
-        if (profileJson) {
-            setData(profileJson)
-            setRepositories(repositoriesJson)
-        }
-    };
+const Navbar = (props) => {
+    const { username, data, repositories, onChange, onSubmit } = props;
 
     return (
         <React.Fragment>
@@ -36,20 +13,19 @@ const Navbar = () => {
                     <input
                         className="form-control mr-sm-2"
                         type="search"
-                        placeholder="Search"
+                        placeholder="Search a username"
                         value={username}
-                        onChange={onChangeHandler}
+                        onChange={onChange}
                     />
                     <button
                         className="btn btn-outline-info my-2 my-sm-0"
                         type="submit"
-                        onClick={sumbitHandler}
+                        onClick={onSubmit}
                     >
                         Submit
                     </button>
                 </form>
             </nav>
-
             <Table className="pt-5" data={data} repositories={repositories} />
         </React.Fragment>
     )
