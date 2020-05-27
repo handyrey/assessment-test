@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Navbar from "./Navbar";
@@ -9,16 +9,12 @@ const Profile = () => {
     const [username, setUsername] = useState("");
     const [repositories, setRepositories] = useState([]);
 
-    const handleChange = event => {
-        setUsername(event.target.value);
-    };
-
-    const handleSubmit = async event => {
-        event.preventDefault();
+    const handleSubmit = useCallback(async (e) => {
+       e.preventDefault();
 
         try {
             const { data: profile } = await axios.get(`https://api.github.com/users/${username}`);
-            console.log({ profile });
+            // console.log({ profile });
 
             const { data: repositories } = await axios.get(profile.repos_url);
             // console.log({ repositories });
@@ -29,13 +25,13 @@ const Profile = () => {
             }
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                toast.error(`user not found`);
+                toast.error("user not found");
             } else {
                 console.log(err)
                 toast.error("An unexpected error occurred")
             }
         }
-    };
+    }, [username])
 
     return (
         <React.Fragment>
@@ -44,7 +40,7 @@ const Profile = () => {
                 username={username}
                 data={data}
                 repositories={repositories}
-                onChange={handleChange}
+                onChange={(e) => setUsername(e.target.value)}
                 onSubmit={handleSubmit}
             />
         </React.Fragment>

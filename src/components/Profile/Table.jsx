@@ -12,7 +12,7 @@ const Table = (props) => {
                 <thead>
                 <tr>
                     <th scope="col">Avatar</th>
-                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Repositories</th>
                 </tr>
                 </thead>
